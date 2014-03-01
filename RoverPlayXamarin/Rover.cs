@@ -20,6 +20,7 @@ namespace RoverPlayXamarin
 			get;
 			private set;
 		}
+
 		/// <summary>
 		/// Name of rover
 		/// </summary>
@@ -28,6 +29,7 @@ namespace RoverPlayXamarin
 			get;
 			private set;
 		}
+
 		/// <summary>
 		/// Current position
 		/// </summary>
@@ -36,7 +38,7 @@ namespace RoverPlayXamarin
 			get;
 			private set;
 		}
-			
+
 		/// <summary>
 		/// Initialize our rover
 		/// </summary>
@@ -48,7 +50,23 @@ namespace RoverPlayXamarin
 			this.Facing = Facing.North;
 		}
 
-		public void TurnRight()
+		/// <summary>
+		/// Initialize rover with given position and facing
+		/// </summary>
+		/// <param name="name">Name.</param>
+		/// <param name="position">Position.</param>
+		/// <param name="facing">Facing.</param>
+		public Rover (string name, Tuple<int, int> position, Facing facing)
+			: this (name)
+		{
+			this.Position = position;
+			this.Facing = facing;
+		}
+
+		/// <summary>
+		/// Turn rover in right direction.
+		/// </summary>
+		public void TurnRight ()
 		{
 			if (this.Facing == Facing.West)
 				this.Facing = Facing.North;
@@ -56,12 +74,65 @@ namespace RoverPlayXamarin
 				this.Facing++;
 		}
 
-		public void TurnLeft()
+		/// <summary>
+		/// Turn rover in left direction
+		/// </summary>
+		public void TurnLeft ()
 		{
 			if (this.Facing == Facing.North)
 				this.Facing = Facing.West;
 			else
 				this.Facing--;
+		}
+
+		public override string ToString ()
+		{
+			return string.Format ("[Rover: Facing={0}, Name={1}, Position={2}]", Facing, Name, Position);
+		}
+
+		/// <summary>
+		/// Rover move forward
+		/// </summary>
+		public void MoveForward ()
+		{
+			switch (this.Facing) {
+
+			case Facing.East:
+				this.Position = this.Position.UpdateTupleValue (1, 0);
+				break;
+			case Facing.South:
+				this.Position = this.Position.UpdateTupleValue (0, -1);
+				break;
+			case Facing.North:
+				this.Position = this.Position.UpdateTupleValue (0, 1);
+				break;
+			case Facing.West:
+				this.Position = this.Position.UpdateTupleValue (-1, 0);
+				break;
+			}
+		}
+
+		/// <summary>
+		/// Rover moves the backward.
+		/// </summary>
+		public void MoveBackward()
+		{
+			switch (this.Facing) {
+
+			case Facing.East:
+				this.Position = this.Position.UpdateTupleValue (-1, 0);
+				break;
+			case Facing.West:
+				this.Position = this.Position.UpdateTupleValue (1, 0);
+				break;
+			case Facing.North:
+				this.Position = this.Position.UpdateTupleValue (0, -1);
+				break;
+			case Facing.South:
+				this.Position = this.Position.UpdateTupleValue (1, 0);
+				break;
+
+			}
 		}
 	}
 }
