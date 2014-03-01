@@ -5,15 +5,20 @@ using RoverPlayXamarin;
 namespace RoverPlayTests
 {
 	[TestFixture ()]
-	public class Test
+	public class RoverTests
 	{
-		[Test ()]
-		public void TestCase ()
+		private Rover _rover;
+
+		public RoverTests()
 		{
-			var comp = new Computation ();
-			var result = comp.GetRandomNumber (12);
-			var expected ="12";
-			Assert.AreEqual (expected, result);
+			_rover = new Rover ("TestRover");
+		}
+
+		[Test ()]
+		public void InitRover ()
+		{
+			Assert.AreEqual (Facing.North, _rover.Facing);
+			Assert.AreEqual (new Tuple<int, int> (0, 0), _rover.Position);
 		}
 	}
 }
