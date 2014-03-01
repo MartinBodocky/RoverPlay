@@ -47,6 +47,22 @@ namespace RoverPlayXamarin
 			this.Position = new Tuple<int, int> (0, 0);
 			this.Facing = Facing.North;
 		}
+
+		public void TurnRight()
+		{
+			if (this.Facing == Facing.West)
+				this.Facing = Facing.North;
+			else
+				this.Facing++;
+		}
+
+		public void TurnLeft()
+		{
+			if (this.Facing == Facing.North)
+				this.Facing = Facing.West;
+			else
+				this.Facing--;
+		}
 	}
 }
 
