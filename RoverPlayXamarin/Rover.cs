@@ -100,71 +100,114 @@ namespace RoverPlayXamarin
 
 		public override string ToString ()
 		{
-			return string.Format ("{0},{1},{2}", Position.Item1, Position.Item2, Facing.ToString().Substring(0,1));
+			return string.Format ("{0},{1},{2}", Position.Item1, Position.Item2, Facing.ToString ().Substring (0, 1));
 		}
 
 		/// <summary>
 		/// Rover move forward
 		/// </summary>
-		public void MoveForward ()
+		public bool MoveForward ()
 		{
-			var updatedPosition = new Tuple<int, int> (0, 0);
+			var updatedPosition = new Tuple<uint, uint> (0, 0);
 
 			switch (this.Facing) {
 
 			case Facing.East:
-				updatedPosition = this.Position.UpdateTupleValue (1, 0);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (1, 0));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
+
 			case Facing.South:
-				updatedPosition = this.Position.UpdateTupleValue (0, -1);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (0, -1));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
+
 			case Facing.North:
-				updatedPosition = this.Position.UpdateTupleValue (0, 1);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (0, 1));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
+
 			case Facing.West:
-				updatedPosition = this.Position.UpdateTupleValue (-1, 0);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (-1, 0));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
 			}
+
+			throw new ArgumentOutOfRangeException ("We cannot recognise this facing direction ...");
 		}
 
 		/// <summary>
 		/// Rover moves the backward.
 		/// </summary>
-		public void MoveBackward()
+		public bool MoveBackward ()
 		{
-			var updatedPosition = new Tuple<int, int> (0, 0);
+			var updatedPosition = new Tuple<uint, uint> (0, 0);
 
 			switch (this.Facing) {
 
 			case Facing.East:
-				updatedPosition = this.Position.UpdateTupleValue (-1, 0);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;	
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (-1, 0));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
+
 			case Facing.West:
-				updatedPosition = this.Position.UpdateTupleValue (1, 0);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (1, 0));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
+
 			case Facing.North:
-				updatedPosition = this.Position.UpdateTupleValue (0, -1);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;	
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (0, -1));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
+
 			case Facing.South:
-				updatedPosition = this.Position.UpdateTupleValue (0, 1);
-				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
-				break;
+				updatedPosition = this.Mars.Size.PositionOnMars (this.Position.UpdateTupleValue (0, 1));
+				if (!Mars.Obstacles.Contains (updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				}
+				else
+					return false;
 			}
+
+			throw new ArgumentOutOfRangeException ("We cannot recognise this facing direction ...");
 		}
 
 		/// <summary>
 		/// Executed commands from stream
 		/// </summary>
 		/// <param name="input">Input.</param>
-		public void Commands(string input)
+		public bool Commands (string input, out int positionHit)
 		{
+			positionHit = 0;
 			char[] cmds = input.ToCharArray ();
 			for (int i = 0; i < cmds.Length; i++) {
 				switch (cmds [i]) {
@@ -175,13 +218,20 @@ namespace RoverPlayXamarin
 					this.TurnRight ();
 					break;
 				case 'F':
-					this.MoveForward ();
+					if (!this.MoveForward ()) {
+						positionHit = i+1;
+						return false;
+					}
 					break;
 				case 'B':
-					this.MoveBackward ();
+					if (!this.MoveBackward ()) {
+						positionHit = i + 1;
+						return false;
+					}
 					break;
 				}
 			}
+			return true;
 		}
 
 		/// <summary>
@@ -189,9 +239,10 @@ namespace RoverPlayXamarin
 		/// </summary>
 		/// <returns>The to position.</returns>
 		/// <param name="target">Target.</param>
-		public string MoveToPosition(Tuple<uint, uint> target)
+		public string MoveToPosition (Tuple<uint, uint> target, out bool hit)
 		{
 			string steps = "";
+			hit = false;
 
 			// first move to the same horizontal level
 			if (target.Item2 >= this.Position.Item2) {
@@ -202,19 +253,25 @@ namespace RoverPlayXamarin
 				}
 				// go to the same horizontal level
 				while (this.Position.Item2 != target.Item2) {
-					steps+="F";
-					this.MoveForward ();
+					if (!this.MoveForward ()) {
+						hit = true;
+						return steps;
+					}
+					steps += "F";
 				}
 			} else {
 				// target is lower, we need to face to south
 				while (this.Facing != Facing.South) {
-					steps+="L";
+					steps += "L";
 					this.TurnLeft ();
 				}
 				// go to the same horizontal level
 				while (this.Position.Item2 != target.Item2) {
-					steps+="F";
-					this.MoveForward ();
+					if (!this.MoveForward ()) {
+						hit = true;
+						return steps;
+					}
+					steps += "F";
 				}
 			}
 
@@ -228,19 +285,25 @@ namespace RoverPlayXamarin
 				}
 				// reach target
 				while (this.Position.Item1 != target.Item1) {
+					if (!this.MoveForward ()) {
+						hit = true;
+						return steps;
+					}
 					steps += "F";
-					this.MoveForward ();
 				}
 			} else {
 				// we need to face west
 				while (this.Facing != Facing.West) {
-					steps+="L";
+					steps += "L";
 					this.TurnLeft ();
 				}
 				// reach target
 				while (this.Position.Item1 != target.Item1) {
+					if (!this.MoveForward ()) {
+						hit = true;
+						return steps;
+					}
 					steps += "F";
-					this.MoveForward ();
 				}
 			}
 

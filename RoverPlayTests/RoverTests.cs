@@ -4,7 +4,7 @@ using RoverPlayXamarin;
 
 namespace RoverPlayTests
 {
-	[TestFixture ()]
+	[TestFixture]
 	public class RoverTests
 	{
 		private Mars _mars = new Mars (new Tuple<uint, uint> (100, 100));
@@ -144,7 +144,8 @@ namespace RoverPlayTests
 		public void RoverCommands ()
 		{
 			var _rover = new Rover ("Max", _mars);
-			_rover.Commands ("FFRFRF");
+			var positionHit = 0;
+			_rover.Commands ("FFRFRF", out positionHit);
 			Assert.AreEqual (new Tuple<uint, uint> (1, 1), _rover.Position);
 		}
 	}

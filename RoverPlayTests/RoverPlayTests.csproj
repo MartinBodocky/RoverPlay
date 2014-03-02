@@ -29,15 +29,14 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
+    <Reference Include="nunit.framework" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RoverTests.cs" />
     <Compile Include="HelperTests.cs" />
     <Compile Include="DiscoverMarsTests1.cs" />
+    <Compile Include="DiscoverMarsTests2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -45,8 +44,5 @@
       <Project>{6C16164E-6649-46AA-9E16-E3F91BE95C16}</Project>
       <Name>RoverPlayXamarin</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>
