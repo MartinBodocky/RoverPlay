@@ -46,6 +46,38 @@ namespace RoverPlayXamarin
 			else
 				return true;
 		}
+
+		/// <summary>
+		/// Parse user input about target
+		/// </summary>
+		/// <returns>The target.</returns>
+		/// <param name="input">Input.</param>
+		public static bool ParseTarget(this string input, out Tuple<uint, uint> result)
+		{
+			result = new Tuple<uint,uint> (0, 0);
+			if (input.StartsWith ("T(")) {
+				var index1 = input.IndexOf ('(');
+				var index2 = input.IndexOf (',');
+				if (index2 == -1 || index1 == -1)
+					return false;
+				string Xstr = input.Substring (index1+1, index2 - index1-1);
+				uint X = 0;
+				if (!uint.TryParse (Xstr, out X))
+					return false;
+				var index3 = input.IndexOf (')');
+				if (index3 == -1)
+					return false;
+				string Ystr = input.Substring (index2+1, index3 - index2-1);
+				uint Y = 0;
+				if (!uint.TryParse (Ystr,out  Y))
+					return false;
+
+				result = new Tuple<uint, uint> (X, Y);
+				return true;
+
+			} else
+				return false;
+		}
 	}
 }
 

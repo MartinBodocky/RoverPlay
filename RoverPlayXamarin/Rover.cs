@@ -217,6 +217,69 @@ namespace RoverPlayXamarin
 				}
 			}
 		}
+
+		/// <summary>
+		/// Function moves with rover to target position
+		/// </summary>
+		/// <returns>The to position.</returns>
+		/// <param name="target">Target.</param>
+		public string MoveToPosition(Tuple<uint, uint> target)
+		{
+			string steps = "";
+
+			// first move to the same horizontal level
+			if (target.Item2 >= this.Position.Item2) {
+				// target is higher, we need to face to north
+				while (this.Facing != Facing.North) {
+					steps += "L";
+					this.TurnLeft ();
+				}
+				// go to the same horizontal level
+				while (this.Position.Item2 != target.Item2) {
+					steps+="F";
+					this.MoveForward ();
+				}
+			} else {
+				// target is lower, we need to face to south
+				while (this.Facing != Facing.South) {
+					steps+="L";
+					this.TurnLeft ();
+				}
+				// go to the same horizontal level
+				while (this.Position.Item2 != target.Item2) {
+					steps+="F";
+					this.MoveForward ();
+				}
+			}
+
+			//now we are the same horizontal level, 
+			//we need to face to right direction are reach target
+			if (target.Item1 >= this.Position.Item1) {
+				// we need to face east
+				while (this.Facing != Facing.East) {
+					steps += "L";
+					this.TurnLeft ();
+				}
+				// reach target
+				while (this.Position.Item1 != target.Item1) {
+					steps += "F";
+					this.MoveForward ();
+				}
+			} else {
+				// we need to face west
+				while (this.Facing != Facing.West) {
+					steps+="L";
+					this.TurnLeft ();
+				}
+				// reach target
+				while (this.Position.Item1 != target.Item1) {
+					steps += "F";
+					this.MoveForward ();
+				}
+			}
+
+			return steps;
+		}
 	}
 }
 

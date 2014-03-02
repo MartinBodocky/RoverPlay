@@ -42,6 +42,53 @@ namespace RoverPlayTests
 			var expected = false;
 			Assert.AreEqual (expected, result);
 		}
+
+		[Test]
+		public void ParseTarget1()
+		{
+			string input ="T(12,3)";
+			Tuple<uint, uint> result = new Tuple<uint, uint> (0, 0);
+			var ret = input.ParseTarget (out result);
+			Assert.AreEqual (true, ret);
+			Assert.AreEqual (new Tuple<uint, uint> (12, 3), result);
+		}
+
+		[Test]
+		public void ParseTarget2()
+		{
+			string input ="T(1233,344)";
+			Tuple<uint, uint> result = new Tuple<uint, uint> (0, 0);
+			var ret = input.ParseTarget (out result);
+			Assert.AreEqual (true, ret);
+			Assert.AreEqual (new Tuple<uint, uint> (1233, 344), result);
+		}
+
+		[Test]
+		public void ParseTarget3()
+		{
+			string input ="T(12a,3)";
+			Tuple<uint, uint> result = new Tuple<uint, uint> (0, 0);
+			var ret = input.ParseTarget (out result);
+			Assert.AreEqual (false, ret);
+		}
+
+		[Test]
+		public void ParseTarget4()
+		{
+			string input ="T(12.12,3)";
+			Tuple<uint, uint> result = new Tuple<uint, uint> (0, 0);
+			var ret = input.ParseTarget (out result);
+			Assert.AreEqual (false, ret);
+		}
+
+		[Test]
+		public void ParseTarget5()
+		{
+			string input ="T(12,-3)";
+			Tuple<uint, uint> result = new Tuple<uint, uint> (0, 0);
+			var ret = input.ParseTarget (out result);
+			Assert.AreEqual (false, ret);
+		}
 	}
 }
 
