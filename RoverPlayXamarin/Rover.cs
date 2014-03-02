@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace RoverPlayXamarin
 {
@@ -40,11 +41,22 @@ namespace RoverPlayXamarin
 		}
 
 		/// <summary>
+		/// Mars grid
+		/// </summary>
+		/// <value>The mars.</value>
+		public Mars Mars {
+			get;
+			private set;
+		}
+
+		/// <summary>
 		/// Initialize our rover
 		/// </summary>
 		/// <param name="name">Name.</param>
-		public Rover (string name)
+		/// <param name="mars">Mars</param> 
+		public Rover (string name, Mars mars)
 		{
+			this.Mars = mars;
 			this.Name = name;
 			this.Position = new Tuple<int, int> (0, 0);
 			this.Facing = Facing.North;
@@ -56,8 +68,9 @@ namespace RoverPlayXamarin
 		/// <param name="name">Name.</param>
 		/// <param name="position">Position.</param>
 		/// <param name="facing">Facing.</param>
-		public Rover (string name, Tuple<int, int> position, Facing facing)
-			: this (name)
+		/// <param name="mars">Mars</param> 
+		public Rover (string name, Mars mars, Tuple<int, int> position, Facing facing)
+			: this (name, mars)
 		{
 			this.Position = position;
 			this.Facing = facing;
@@ -87,51 +100,121 @@ namespace RoverPlayXamarin
 
 		public override string ToString ()
 		{
-			return string.Format ("[Rover: Facing={0}, Name={1}, Position={2}]", Facing, Name, Position);
+			return string.Format ("{0},{1},{2}", Position.Item1, Position.Item2, Facing.ToString().Substring(0,1));
 		}
 
 		/// <summary>
 		/// Rover move forward
 		/// </summary>
-		public void MoveForward ()
+		public bool MoveForward ()
 		{
+			var updatedPosition = new Tuple<int, int> (0, 0);
+
 			switch (this.Facing) {
 
 			case Facing.East:
-				this.Position = this.Position.UpdateTupleValue (1, 0);
-				break;
+				updatedPosition = this.Position.UpdateTupleValue (1, 0);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+
 			case Facing.South:
-				this.Position = this.Position.UpdateTupleValue (0, -1);
-				break;
+				updatedPosition = this.Position.UpdateTupleValue (0, -1);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+
 			case Facing.North:
-				this.Position = this.Position.UpdateTupleValue (0, 1);
-				break;
+				updatedPosition = this.Position.UpdateTupleValue (0, 1);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+
 			case Facing.West:
-				this.Position = this.Position.UpdateTupleValue (-1, 0);
-				break;
+				updatedPosition = this.Position.UpdateTupleValue (-1, 0);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+
 			}
+			throw new ArgumentOutOfRangeException ("We are defining wrong facing direction...");
 		}
 
 		/// <summary>
 		/// Rover moves the backward.
 		/// </summary>
-		public void MoveBackward()
+		public bool MoveBackward()
 		{
+			var updatedPosition = new Tuple<int, int> (0, 0);
+
 			switch (this.Facing) {
 
 			case Facing.East:
-				this.Position = this.Position.UpdateTupleValue (-1, 0);
-				break;
+				updatedPosition = this.Position.UpdateTupleValue (-1, 0);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+					
 			case Facing.West:
-				this.Position = this.Position.UpdateTupleValue (1, 0);
-				break;
-			case Facing.North:
-				this.Position = this.Position.UpdateTupleValue (0, -1);
-				break;
-			case Facing.South:
-				this.Position = this.Position.UpdateTupleValue (1, 0);
-				break;
+				updatedPosition = this.Position.UpdateTupleValue (1, 0);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
 
+			case Facing.North:
+				updatedPosition = this.Position.UpdateTupleValue (0, -1);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+					
+			case Facing.South:
+				updatedPosition = this.Position.UpdateTupleValue (0, 1);
+				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
+					this.Position = updatedPosition;
+					return true;
+				} else
+					return false;
+			}
+
+			throw new ArgumentOutOfRangeException ("We are defining wrong facing direction...");
+		}
+
+		/// <summary>
+		/// Executed commands from stream
+		/// </summary>
+		/// <param name="input">Input.</param>
+		public void Commands(string input)
+		{
+			char[] cmds = input.ToCharArray ();
+			for (int i = 0; i < cmds.Length; i++) {
+				switch (cmds [i]) {
+				case 'L':
+					this.TurnLeft ();
+					break;
+				case 'R':
+					this.TurnRight ();
+					break;
+				case 'F':
+					this.MoveForward ();
+					break;
+				case 'B':
+					this.MoveBackward ();
+					break;
+				}
 			}
 		}
 	}
