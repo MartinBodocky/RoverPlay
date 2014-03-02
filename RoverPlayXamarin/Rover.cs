@@ -35,7 +35,7 @@ namespace RoverPlayXamarin
 		/// Current position
 		/// </summary>
 		/// <value>The position.</value>
-		public Tuple<int, int> Position {
+		public Tuple<uint, uint> Position {
 			get;
 			private set;
 		}
@@ -58,7 +58,7 @@ namespace RoverPlayXamarin
 		{
 			this.Mars = mars;
 			this.Name = name;
-			this.Position = new Tuple<int, int> (0, 0);
+			this.Position = new Tuple<uint, uint> (0, 0);
 			this.Facing = Facing.North;
 		}
 
@@ -69,7 +69,7 @@ namespace RoverPlayXamarin
 		/// <param name="position">Position.</param>
 		/// <param name="facing">Facing.</param>
 		/// <param name="mars">Mars</param> 
-		public Rover (string name, Mars mars, Tuple<int, int> position, Facing facing)
+		public Rover (string name, Mars mars, Tuple<uint, uint> position, Facing facing)
 			: this (name, mars)
 		{
 			this.Position = position;
@@ -106,7 +106,7 @@ namespace RoverPlayXamarin
 		/// <summary>
 		/// Rover move forward
 		/// </summary>
-		public bool MoveForward ()
+		public void MoveForward ()
 		{
 			var updatedPosition = new Tuple<int, int> (0, 0);
 
@@ -114,44 +114,27 @@ namespace RoverPlayXamarin
 
 			case Facing.East:
 				updatedPosition = this.Position.UpdateTupleValue (1, 0);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;
 			case Facing.South:
 				updatedPosition = this.Position.UpdateTupleValue (0, -1);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;
 			case Facing.North:
 				updatedPosition = this.Position.UpdateTupleValue (0, 1);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;
 			case Facing.West:
 				updatedPosition = this.Position.UpdateTupleValue (-1, 0);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;
 			}
-			throw new ArgumentOutOfRangeException ("We are defining wrong facing direction...");
 		}
 
 		/// <summary>
 		/// Rover moves the backward.
 		/// </summary>
-		public bool MoveBackward()
+		public void MoveBackward()
 		{
 			var updatedPosition = new Tuple<int, int> (0, 0);
 
@@ -159,38 +142,21 @@ namespace RoverPlayXamarin
 
 			case Facing.East:
 				updatedPosition = this.Position.UpdateTupleValue (-1, 0);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-					
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;	
 			case Facing.West:
 				updatedPosition = this.Position.UpdateTupleValue (1, 0);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;
 			case Facing.North:
 				updatedPosition = this.Position.UpdateTupleValue (0, -1);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
-					
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;	
 			case Facing.South:
 				updatedPosition = this.Position.UpdateTupleValue (0, 1);
-				if (this.Mars.Size.AcceptedOnMars(updatedPosition)) {
-					this.Position = updatedPosition;
-					return true;
-				} else
-					return false;
+				this.Position = this.Mars.Size.PositionOnMars (updatedPosition);
+				break;
 			}
-
-			throw new ArgumentOutOfRangeException ("We are defining wrong facing direction...");
 		}
 
 		/// <summary>

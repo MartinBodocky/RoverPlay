@@ -14,19 +14,19 @@ namespace RoverPlayTests
 		{
 			var _rover = new Rover ("TestRover", _mars);
 			Assert.AreEqual (Facing.North, _rover.Facing);
-			Assert.AreEqual (new Tuple<int, int> (0, 0), _rover.Position);
+			Assert.AreEqual (new Tuple<uint, uint> (0, 0), _rover.Position);
 		}
 
 		[Test]
-		public void InitRoverWithPosition()
+		public void InitRoverWithPosition ()
 		{
-			var _rover = new Rover ("TestRover", _mars, new Tuple<int,int> (1, 5), Facing.South);
-			Assert.AreEqual (new Tuple<int, int> (1, 5), _rover.Position);
+			var _rover = new Rover ("TestRover", _mars, new Tuple<uint,uint> (1, 5), Facing.South);
+			Assert.AreEqual (new Tuple<uint, uint> (1, 5), _rover.Position);
 			Assert.AreEqual (Facing.South, _rover.Facing);
 		}
 
 		[Test]
-		public void RoverTurningLeft()
+		public void RoverTurningLeft ()
 		{
 			var _rover = new Rover ("TestRover", _mars);
 			_rover.TurnLeft ();
@@ -36,7 +36,7 @@ namespace RoverPlayTests
 		}
 
 		[Test]
-		public void RoverTurningRight()
+		public void RoverTurningRight ()
 		{
 			var _rover = new Rover ("TestRover", _mars);
 			_rover.TurnRight ();
@@ -46,49 +46,52 @@ namespace RoverPlayTests
 		}
 
 		[Test]
-		public void RoverMovingForward()
+		public void RoverMovingForward ()
 		{
-			var _rover = new Rover ("TestRover",_mars);
+			var _rover = new Rover ("TestRover", _mars);
 			_rover.MoveForward ();
 			_rover.MoveForward ();
-			Assert.AreEqual (new Tuple<int,int> (0, 2), _rover.Position);
+			Assert.AreEqual (new Tuple<uint,uint> (0, 2), _rover.Position);
 			Assert.AreEqual (Facing.North, _rover.Facing);
 		}
 
 		[Test]
-		public void RoverMovingBackward()
+		public void RoverMovingBackward ()
 		{
-			var _rover = new Rover ("TestRover",_mars);
+			var _rover = new Rover ("TestRover", _mars);
 			_rover.MoveBackward ();
-			Assert.AreEqual (new Tuple<int,int> (0, 0), _rover.Position);
+			Assert.AreEqual (new Tuple<uint,uint> (0, 100), _rover.Position);
 			Assert.AreEqual (Facing.North, _rover.Facing);
 		}
 
 		[Test]
-		public void RoverMovingForwardUntilEnd()
+		public void RoverMovingForwardUntilEnd ()
 		{
 			var _rover = new Rover ("TestRover", _mars);
-			while (_rover.MoveForward ()) {
+			while (_rover.Position.Item2 != 100) {
+				_rover.MoveForward ();
 			}
-			Assert.AreEqual (new Tuple<int,int> (0, 100), _rover.Position);
+			Assert.AreEqual (new Tuple<uint,uint> (0, 100), _rover.Position);
 		}
 
 		[Test]
-		public void RoverMovingToOppositeCorner()
+		public void RoverMovingToOppositeCorner ()
 		{
 			var _rover = new Rover ("TestRover", _mars);
-			while (_rover.MoveForward ()) {
+			while (_rover.Position.Item2 != 100) {
+				_rover.MoveForward ();
 			}
-			Assert.AreEqual (new Tuple<int,int> (0, 100), _rover.Position);
+			Assert.AreEqual (new Tuple<uint,uint> (0, 100), _rover.Position);
 			_rover.TurnRight ();
 			Assert.AreEqual (Facing.East, _rover.Facing);
-			while (_rover.MoveForward ()) {
+			while (_rover.Position.Item1 != 100) {
+				_rover.MoveForward ();
 			}
-			Assert.AreEqual (new Tuple<int, int> (100, 100), _rover.Position);
+			Assert.AreEqual (new Tuple<uint, uint> (100, 100), _rover.Position);
 		}
 
 		[Test]
-		public void RoverMovingInMiddleAndBack()
+		public void RoverMovingInMiddleAndBack ()
 		{
 			var _rover = new Rover ("TestRover", _mars);
 
@@ -98,7 +101,7 @@ namespace RoverPlayTests
 			while (_rover.Position.Item1 != 50) {
 				_rover.MoveForward ();
 			}
-			Assert.AreEqual (new Tuple<int,int> (50, 0), _rover.Position);
+			Assert.AreEqual (new Tuple<uint,uint> (50, 0), _rover.Position);
 
 			_rover.TurnLeft ();
 			Assert.AreEqual (Facing.North, _rover.Facing);
@@ -106,26 +109,28 @@ namespace RoverPlayTests
 			while (_rover.Position.Item2 != 50) {
 				_rover.MoveForward ();
 			}
-			Assert.AreEqual (new Tuple<int,int> (50, 50), _rover.Position);
+			Assert.AreEqual (new Tuple<uint, uint> (50, 50), _rover.Position);
 
 			//now we are going to backward back to left boardline
 			_rover.TurnRight ();
 			Assert.AreEqual (Facing.East, _rover.Facing);
 
-			while (_rover.MoveBackward ()) {
+			while (_rover.Position.Item1 != 0) {
+				_rover.MoveBackward ();
 			}
-			Assert.AreEqual (new Tuple<int,int> (0, 50), _rover.Position);
+			Assert.AreEqual (new Tuple<uint, uint> (0, 50), _rover.Position);
 
 			_rover.TurnRight ();
 			Assert.AreEqual (Facing.South, _rover.Facing);
 
-			while (_rover.MoveForward ()) {
+			while (_rover.Position.Item2 != 0) {
+				_rover.MoveForward ();
 			}
-			Assert.AreEqual (new Tuple<int,int> (0, 0), _rover.Position);
+			Assert.AreEqual (new Tuple<uint, uint> (0, 0), _rover.Position);
 		}
 
 		[Test]
-		public void RoverRepresentation()
+		public void RoverRepresentation ()
 		{
 			var _rover = new Rover ("Max", _mars);
 			Assert.AreEqual ("0,0,N", _rover.ToString ());
@@ -136,11 +141,11 @@ namespace RoverPlayTests
 		}
 
 		[Test]
-		public void RoverCommands()
+		public void RoverCommands ()
 		{
 			var _rover = new Rover ("Max", _mars);
 			_rover.Commands ("FFRFRF");
-			Assert.AreEqual (new Tuple<int, int> (1, 1), _rover.Position);
+			Assert.AreEqual (new Tuple<uint, uint> (1, 1), _rover.Position);
 		}
 	}
 }

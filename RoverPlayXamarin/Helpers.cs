@@ -11,26 +11,36 @@ namespace RoverPlayXamarin
 		/// <param name="tuple">Tuple.</param>
 		/// <param name="value1">Value1.</param>
 		/// <param name="value2">Value2.</param>
-		public static Tuple<int,int> UpdateTupleValue (this Tuple<int,int> tuple, int value1, int value2)
+		public static Tuple<int,int> UpdateTupleValue (this Tuple<uint,uint> tuple, int value1, int value2)
 		{
-			return new Tuple<int, int> (tuple.Item1 + value1, tuple.Item2 + value2);
+			return new Tuple<int, int> ( (int)tuple.Item1 + value1, (int)tuple.Item2 + value2);
 		}
 
 		/// <summary>
-		/// Verification whether new position is on Mars or not
+		/// Create position on Mars, because Mars is sphere
 		/// </summary>
-		/// <returns><c>true</c>, if on mars was accepteded, <c>false</c> otherwise.</returns>
+		/// <returns>The on mars.</returns>
 		/// <param name="mars">Mars.</param>
-		/// <param name="newPosition">New position.</param>
-		public static bool AcceptedOnMars(this Tuple<uint, uint> mars, Tuple<int,int> newPosition)
+		/// <param name="newPoistion">New poistion.</param>
+		public static Tuple<uint, uint> PositionOnMars(this Tuple<uint, uint> mars, Tuple<int,int> newPoistion)
 		{
-			if (mars.Item1 >= newPosition.Item1
-			    && mars.Item2 >= newPosition.Item2
-			    && newPosition.Item1 >= 0
-			    && newPosition.Item2 >= 0)
-				return true;
+			uint item1, item2;
+
+			if (newPoistion.Item1 < 0)
+				item1 = mars.Item1;
+			else if (mars.Item1 >= newPoistion.Item1)
+				item1 = (uint)newPoistion.Item1;
 			else
-				return false;
+				item1 = 0;
+
+			if (newPoistion.Item2 < 0)
+				item2 = mars.Item2;
+			else if (mars.Item2 >= newPoistion.Item2)
+				item2 = (uint)newPoistion.Item2;
+			else
+				item2 = 0;
+
+			return new Tuple<uint, uint> (item1, item2);
 		}
 
 		/// <summary>

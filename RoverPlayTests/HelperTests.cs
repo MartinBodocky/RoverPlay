@@ -89,6 +89,24 @@ namespace RoverPlayTests
 			var ret = input.ParseTarget (out result);
 			Assert.AreEqual (false, ret);
 		}
+
+		[Test]
+		public void PositionOnMars1()
+		{
+			var _mars = new Mars (new Tuple<uint, uint> (100, 100));
+			var result = _mars.Size.PositionOnMars (new Tuple<int, int> (100, 101));
+			var expected = new Tuple<uint, uint> (100, 0);
+			Assert.AreEqual (expected, result);
+		}
+
+		[Test]
+		public void PositionOnMars2()
+		{
+			var _mars = new Mars (new Tuple<uint, uint> (100, 100));
+			var result = _mars.Size.PositionOnMars (new Tuple<int, int> (100, -1));
+			var expected = new Tuple<uint, uint> (100, 100);
+			Assert.AreEqual (expected, result);
+		}
 	}
 }
 
