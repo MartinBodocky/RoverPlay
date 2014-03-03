@@ -51,6 +51,17 @@ namespace RoverPlayTests
 			Assert.AreEqual (expected, steps);
 			Assert.AreEqual (new Tuple<uint,uint>(5,5), _rover.Position);
 		}
+
+		[Test]
+		public void MoveToTarget5 ()
+		{
+			var _rover = new Rover ("Max", _mars, new Tuple<uint, uint>(10,10),Facing.North);
+			var hit = false;
+			var steps = _rover.MoveToPosition (new Tuple<uint, uint> (105, 105), out hit);
+			var expected = "LLFFFFFLLLFFFFF";
+			Assert.AreEqual (expected, steps);
+			Assert.AreEqual (new Tuple<uint,uint>(5,5), _rover.Position);
+		}
 	}
 }
 

@@ -242,6 +242,8 @@ namespace RoverPlayXamarin
 		public string MoveToPosition (Tuple<uint, uint> target, out bool hit)
 		{
 			string steps = "";
+			// we need to fit our target position into Mars grid
+			target = new Tuple<uint, uint> (target.Item1 % Mars.Size.Item1, target.Item2 % Mars.Size.Item2);
 			hit = false;
 
 			// first move to the same horizontal level
